@@ -24,12 +24,17 @@ const GCAL_ID = "c_1948419c48cd1e073ec4a75abdf1aba76b04a866ecedb721ee4f5ea67c69e
 
 
 const MINISTERES = [
-  { nom: "Louange & Adoration", desc: "Diriger l'assemblée dans l'adoration authentique du Seigneur.", icon: "🎵", membres: 28 },
-  { nom: "Jeunesse", desc: "Enflammer la foi des jeunes adultes pour Christ.", icon: "⚡", membres: 54 },
-  { nom: "Intercession", desc: "Priants engagés pour l'église, les nations et les perdus.", icon: "🙏", membres: 19 },
-  { nom: "Évangélisation", desc: "Porter la Bonne Nouvelle dans les rues et au-delà.", icon: "📢", membres: 33 },
-  { nom: "Accueil & Hospitalité", desc: "Créer un espace chaleureux pour chaque visiteur.", icon: "🤝", membres: 22 },
-  { nom: "École du Dimanche", desc: "Former les enfants dans la connaissance de la Parole.", icon: "✏️", membres: 15 },
+  { nom: "Louange & Adoration", desc: "Diriger l'assemblée dans l'adoration authentique du Seigneur.", icon: "🎵" },
+  { nom: "Jeunesse", desc: "Enflammer la foi des jeunes adultes pour Christ.", icon: "⚡" },
+  { nom: "Intercession", desc: "Priants engagés pour l'église, les nations et les perdus.", icon: "🙏" },
+  { nom: "Évangélisation", desc: "Porter la Bonne Nouvelle dans les rues et au-delà.", icon: "📢" },
+  { nom: "Accueil & Hospitalité", desc: "Créer un espace chaleureux pour chaque visiteur.", icon: "🤝" },
+  { nom: "École du Dimanche", desc: "Former les enfants dans la connaissance de la Parole.", icon: "✏️" },
+  { nom: "Technique", desc: "Projection, photo, caméra, sono et réseaux sociaux.", icon: "🎬" },
+  { nom: "Infirmerie", desc: "Prendre soin de la santé et du bien-être de l'assemblée.", icon: "🏥" },
+  { nom: "Ministère des Hommes", desc: "Rassembler et affermir les hommes dans leur foi et leur vocation.", icon: "👨" },
+  { nom: "Ministère des Femmes", desc: "Encourager et équiper les femmes pour servir le Seigneur.", icon: "👩" },
+  { nom: "Librairie", desc: "Mettre à disposition des ressources chrétiennes pour la croissance spirituelle.", icon: "📚" },
 ];
 
 const TEMOIGNAGES = [
@@ -484,16 +489,9 @@ export default function EglisePharos() {
           <div className="min-grid">
             {MINISTERES.map((m, i) => (
               <div key={i} className="min-card">
-                <div className="min-top">
-                  <div className="min-icon">{m.icon}</div>
-                  <div>
-                    <div className="min-num-val">{m.membres}</div>
-                    <div className="min-num-label">membres</div>
-                  </div>
-                </div>
+                <div className="min-icon" style={{ marginBottom: "1rem" }}>{m.icon}</div>
                 <div className="min-nom">{m.nom}</div>
                 <div className="min-desc">{m.desc}</div>
-                <button className="min-btn" onClick={() => showToast("📩 Demande envoyée : " + m.nom)}>Rejoindre +</button>
               </div>
             ))}
           </div>
