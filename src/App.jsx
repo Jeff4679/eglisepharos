@@ -11,9 +11,11 @@ const NAV = [
 
 const CULTES = [
   { jour: "Dimanche", heure: "10h00", titre: "Culte Principal", icon: "☀️" },
-  { jour: "Mercredi", heure: "19h30", titre: "Étude Biblique", icon: "📖" },
-  { jour: "Vendredi", heure: "20h00", titre: "Soirée de Prière", icon: "🔥" },
-  { jour: "Samedi", heure: "15h00", titre: "Jeunesse", icon: "⚡" },
+  { jour: "Vendredi", heure: "19h00", titre: "Prière & Intercession", icon: "🔥" },
+  { jour: "1x / mois", heure: "", titre: "Réunion des Hommes", icon: "👨" },
+  { jour: "1x / mois", heure: "", titre: "Réunion des Femmes", icon: "👩" },
+  { jour: "2x / mois", heure: "", titre: "Réunion des Ados", icon: "⚡" },
+  { jour: "1x / mois", heure: "", titre: "Réunion des Jeunes", icon: "🌟" },
 ];
 
 const GCAL_API_KEY = "AIzaSyALqVf1rJrDF2jwxvB25M21NiaJAaUcXQ8";
