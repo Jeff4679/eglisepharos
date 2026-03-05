@@ -256,14 +256,7 @@ export default function EglisePharos() {
               <button className="btn-yellow" onClick={() => scrollTo("sermons")}>🎧 Écouter un sermon</button>
               <button className="btn-outline-white" onClick={() => scrollTo("evenements")}>📅 Nos événements</button>
             </div>
-            <div className="hero-stats-row">
-              {[{ num: "300+", label: "Membres" }, { num: "8", label: "Ministères" }, { num: "15", label: "Ans de foi" }, { num: "4", label: "Cultes/sem" }].map((s, i) => (
-                <div key={i} className="hero-stat">
-                  <div className="hero-stat-num">{s.num}</div>
-                  <div className="hero-stat-label">{s.label}</div>
-                </div>
-              ))}
-            </div>
+
           </div>
           <div className="hero-card">
             <div className="hero-card-title">📅 Nos rassemblements</div>
@@ -298,22 +291,38 @@ export default function EglisePharos() {
           {/* Filtres */}
           <div className="sermon-filters" style={{ marginBottom: "1.8rem" }}>
             <button className={"sf-btn" + (sermonCat === "dernier" ? " active" : "")} onClick={() => setSermonCat("dernier")}>🎯 Dernier Culte</button>
+            <button className={"sf-btn" + (sermonCat === "mars2026" ? " active" : "")} onClick={() => setSermonCat("mars2026")}>📅 Mars 2026</button>
             <button className={"sf-btn" + (sermonCat === "jan2026" ? " active" : "")} onClick={() => setSermonCat("jan2026")}>📅 Janvier 2026</button>
           </div>
 
           {/* Showcase iframe */}
-          <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "var(--shadow-lg)", background: "#000" }}>
-            {sermonCat === "dernier" && (
-              <iframe src="https://vimeo.com/showcase/12105709/embed" allowFullScreen
-                style={{ width: "100%", height: 500, border: "none", display: "block" }}
+          {sermonCat === "mars2026" && (
+            <div style={{ padding: "56.25% 0 0 0", position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "var(--shadow-lg)" }}>
+              <iframe src="https://vimeo.com/showcase/12136502/embed"
+                allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share"
+                frameBorder="0"
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+                title="Mars 2026 — Église Pharos" />
+            </div>
+          )}
+          {sermonCat === "dernier" && (
+            <div style={{ padding: "56.25% 0 0 0", position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "var(--shadow-lg)" }}>
+              <iframe src="https://vimeo.com/showcase/12105709/embed"
+                allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share"
+                frameBorder="0"
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
                 title="Dernier Culte — Église Pharos" />
-            )}
-            {sermonCat === "jan2026" && (
-              <iframe src="https://vimeo.com/showcase/12068302/embed" allowFullScreen
-                style={{ width: "100%", height: 500, border: "none", display: "block" }}
+            </div>
+          )}
+          {sermonCat === "jan2026" && (
+            <div style={{ padding: "56.25% 0 0 0", position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "var(--shadow-lg)" }}>
+              <iframe src="https://vimeo.com/showcase/12068302/embed"
+                allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share"
+                frameBorder="0"
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
                 title="Janvier 2026 — Église Pharos" />
-            )}
-          </div>
+            </div>
+          )}
           <div style={{ marginTop: "1rem", padding: "1rem 1.5rem", background: "white", borderRadius: 12, border: "1.5px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
             <div>
               <div style={{ fontWeight: 800, color: "var(--navy)", fontSize: "0.9rem" }}>Église Pharos — Culte en ligne</div>
