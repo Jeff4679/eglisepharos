@@ -190,6 +190,18 @@ const css = `
   .footer-copy span { color: var(--yellow); font-weight: 700; }
   .footer-verse-ft { font-family: 'Lora',serif; font-style: italic; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
   .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 12px 24px; border-radius: 100px; font-weight: 700; font-size: 0.88rem; box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 999; border: 1px solid rgba(255,208,0,0.3); animation: toastIn 0.3s ease; white-space: nowrap; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 2rem; animation: fadeIn 0.2s ease; }
+  .modal-box { background: white; border-radius: 24px; padding: 2.5rem; max-width: 520px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,0.3); position: relative; animation: slideUp 0.25s ease; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: var(--offwhite); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; color: var(--gray); transition: all 0.2s; }
+  .modal-close:hover { background: var(--border); }
+  .modal-date-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--blue-pale); color: var(--blue); padding: 6px 16px; border-radius: 100px; font-size: 0.78rem; font-weight: 800; margin-bottom: 1.2rem; letter-spacing: 0.05em; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--navy); letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 1.5rem; }
+  .modal-detail { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; color: var(--gray); }
+  .modal-detail:last-of-type { border-bottom: none; }
+  .modal-detail-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .modal-detail-text { font-weight: 600; color: var(--navy); line-height: 1.5; }
   @keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
   @media (max-width: 900px) {
     .hero-inner { grid-template-columns: 1fr; }
@@ -207,6 +219,7 @@ export default function EglisePharos() {
   const [calView, setCalView] = useState("agenda");
   const [gcalEvents, setGcalEvents] = useState([]);
   const [gcalLoading, setGcalLoading] = useState(true);
+  const [activeEvent, setActiveEvent] = useState(null);
 
   useEffect(() => {
     const now = new Date().toISOString();
@@ -374,7 +387,7 @@ export default function EglisePharos() {
               const mois = start.toLocaleDateString("fr-BE", { month: "short" }).toUpperCase().replace(".","");
               const heure = e.start?.dateTime ? start.toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" }) : "Toute la journée";
               return (
-                <div key={i} className="event-row" onClick={() => showToast("📅 " + e.summary + " — " + heure)}>
+                <div key={i} className="event-row" onClick={() => setActiveEvent(e)}>
                   <div className="event-date">
                     <div className="event-day">{jour}</div>
                     <div className="event-month">{mois}</div>
@@ -586,6 +599,41 @@ export default function EglisePharos() {
           </div>
         </div>
       </footer>
+
+      {/* MODAL ÉVÉNEMENT */}
+      {activeEvent && (() => {
+        const start = new Date(activeEvent.start?.dateTime || activeEvent.start?.date);
+        const end = activeEvent.end?.dateTime ? new Date(activeEvent.end.dateTime) : null;
+        const jour = start.toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+        const heure = activeEvent.start?.dateTime ? start.toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" }) : "Toute la journée";
+        const heureFin = end && activeEvent.end?.dateTime ? end.toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" }) : null;
+        return (
+          <div className="modal-overlay" onClick={() => setActiveEvent(null)}>
+            <div className="modal-box" onClick={e => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setActiveEvent(null)}>✕</button>
+              <div className="modal-date-badge">📅 {jour}</div>
+              <div className="modal-title">{activeEvent.summary}</div>
+              <div className="modal-detail">
+                <span className="modal-detail-icon">🕐</span>
+                <span className="modal-detail-text">{heure}{heureFin ? " — " + heureFin : ""}</span>
+              </div>
+              {activeEvent.location && (
+                <div className="modal-detail">
+                  <span className="modal-detail-icon">📍</span>
+                  <span className="modal-detail-text">{activeEvent.location}</span>
+                </div>
+              )}
+              {activeEvent.description && (
+                <div className="modal-detail">
+                  <span className="modal-detail-icon">📝</span>
+                  <span className="modal-detail-text">{activeEvent.description}</span>
+                </div>
+              )}
+              <button className="btn-blue" style={{ marginTop: "1.5rem" }} onClick={() => setActiveEvent(null)}>Fermer</button>
+            </div>
+          </div>
+        );
+      })()}
 
       {toast && <div className="toast">{toast}</div>}
     </>
