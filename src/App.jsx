@@ -411,8 +411,6 @@ export default function EglisePharos() {
         </div>
       </section>
 
-      </section>
-
       <section id="don" className="don-sec">
         <div className="container">
           <div className="sec-header">
