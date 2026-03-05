@@ -37,12 +37,6 @@ const MINISTERES = [
   { nom: "Librairie", desc: "Mettre à disposition des ressources chrétiennes pour la croissance spirituelle.", icon: "📚" },
 ];
 
-const TEMOIGNAGES = [
-  { nom: "Marie T.", date: "Mai 2025", texte: "J'étais complètement brisée. C'est lors d'une soirée de prière ici que Dieu m'a touchée et restaurée. Ma vie n'est plus la même !", emoji: "💫" },
-  { nom: "David K.", date: "Avril 2025", texte: "Après des mois de prière avec cette communauté, Dieu a accompli le miracle dans ma famille. Il est vivant !", emoji: "🙌" },
-  { nom: "Sandra M.", date: "Mars 2025", texte: "J'ai été libérée d'une dépendance lors de la campagne de délivrance. Toute la gloire à Christ !", emoji: "🔥" },
-];
-
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,13 +128,7 @@ const css = `
   .event-metas { display: flex; gap: 1rem; flex-wrap: wrap; }
   .event-meta { font-size: 0.78rem; color: var(--gray); font-weight: 600; }
   .event-type { background: var(--blue-pale); color: var(--blue); padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
-  .testi-sec { background: linear-gradient(135deg, var(--navy), var(--blue)); padding: 5rem 0; }
-  .testi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-  .testi-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 2rem; }
-  .testi-emoji { font-size: 2rem; margin-bottom: 1rem; }
-  .testi-texte { color: rgba(255,255,255,0.85); font-family: 'Lora', serif; font-style: italic; line-height: 1.8; font-size: 0.92rem; margin-bottom: 1.2rem; }
-  .testi-nom { color: var(--yellow); font-weight: 800; font-size: 0.85rem; }
-  .testi-date { color: rgba(255,255,255,0.4); font-size: 0.75rem; font-weight: 600; }
+
   .don-sec { background: white; }
   .don-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
   .don-amounts { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.8rem; margin-bottom: 1.5rem; }
@@ -423,23 +411,6 @@ export default function EglisePharos() {
         </div>
       </section>
 
-      <section className="testi-sec">
-        <div className="container">
-          <div className="sec-header">
-            <div className="sec-tag" style={{ justifyContent: "center" }}><div className="sec-tag-line" />Témoignages</div>
-            <h2 className="sec-title" style={{ color: "white" }}>Ce que <em style={{ color: "var(--yellow)" }}>Dieu accomplit</em></h2>
-          </div>
-          <div className="testi-grid">
-            {TEMOIGNAGES.map((t, i) => (
-              <div key={i} className="testi-card">
-                <div className="testi-emoji">{t.emoji}</div>
-                <p className="testi-texte">"{t.texte}"</p>
-                <div className="testi-nom">{t.nom}</div>
-                <div className="testi-date">{t.date}</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       <section id="don" className="don-sec">
