@@ -16,14 +16,10 @@ const CULTES = [
   { jour: "Samedi", heure: "15h00", titre: "Jeunesse", icon: "⚡" },
 ];
 
-const EVENEMENTS = [
-  { date: { jour: "14", mois: "JUN" }, titre: "Camp de Jeunesse 2025", lieu: "Centre chrétien, Ransart", heure: "Ven–Dim", type: "Jeunesse" },
-  { date: { jour: "21", mois: "JUN" }, titre: "Journée de Jeûne & Prière", lieu: "Sanctuaire – Salle principale", heure: "6h–18h", type: "Spirituel" },
-  { date: { jour: "28", mois: "JUN" }, titre: "Soirée de Louange & Adoration", lieu: "Rue Paul Pasteur 139", heure: "19h00", type: "Louange" },
-  { date: { jour: "5", mois: "JUL" }, titre: "Baptêmes d'eau", lieu: "Sanctuaire Pharos", heure: "14h00", type: "Sacrement" },
-  { date: { jour: "12", mois: "JUL" }, titre: "École du Saint-Esprit", lieu: "Salle annexe", heure: "9h–17h", type: "Formation" },
-  { date: { jour: "19", mois: "JUL" }, titre: "Culte de Famille", lieu: "Parvis de l'église", heure: "10h–15h", type: "Famille" },
-];
+const GCAL_API_KEY = "AIzaSyALqVf1rJrDF2jwxvB25M21NiaJAaUcXQ8";
+const GCAL_ID = "c_1948419c48cd1e073ec4a75abdf1aba76b04a866ecedb721ee4f5ea67c69e3fc@group.calendar.google.com";
+
+
 
 const MINISTERES = [
   { nom: "Louange & Adoration", desc: "Diriger l'assemblée dans l'adoration authentique du Seigneur.", icon: "🎵", membres: 28 },
@@ -209,6 +205,16 @@ export default function EglisePharos() {
   const [scrolled, setScrolled] = useState(false);
   const [toast, setToast] = useState(null);
   const [calView, setCalView] = useState("agenda");
+  const [gcalEvents, setGcalEvents] = useState([]);
+  const [gcalLoading, setGcalLoading] = useState(true);
+
+  useEffect(() => {
+    const now = new Date().toISOString();
+    fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GCAL_ID)}/events?key=${GCAL_API_KEY}&timeMin=${now}&maxResults=6&singleEvents=true&orderBy=startTime`)
+      .then(r => r.json())
+      .then(d => { setGcalEvents(d.items || []); setGcalLoading(false); })
+      .catch(() => setGcalLoading(false));
+  }, []);
   const [sermonCat, setSermonCat] = useState("dernier");
   const [donAmount, setDonAmount] = useState("20");
   const [donFreq, setDonFreq] = useState("Ponctuel");
@@ -282,9 +288,9 @@ export default function EglisePharos() {
               <h2 className="sec-title">Prédications <em>&amp; Sermons</em></h2>
               <p className="sec-desc">Retrouvez tous nos sermons en ligne. Cliquez sur une vidéo pour la regarder.</p>
             </div>
-            <a href="https://vimeo.com/user253340795" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.eglisepharos.com/video" target="_blank" rel="noopener noreferrer"
               style={{ padding: "9px 20px", borderRadius: 8, border: "1.5px solid #CBD5E1", background: "none", cursor: "pointer", fontSize: "0.78rem", fontWeight: 700, color: "#64748B", textDecoration: "none" }}>
-              Voir sur Vimeo →
+              Tous les sermons →
             </a>
           </div>
 
@@ -338,7 +344,7 @@ export default function EglisePharos() {
               <div style={{ fontWeight: 800, color: "var(--navy)", fontSize: "0.9rem" }}>Église Pharos — Culte en ligne</div>
               <div style={{ fontSize: "0.8rem", color: "var(--gray)", marginTop: 2 }}>Pasteur Franck Quashie · Ransart, Belgique</div>
             </div>
-            <a href="https://vimeo.com/user253340795" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.eglisepharos.com/video" target="_blank" rel="noopener noreferrer"
               style={{ background: "var(--blue)", color: "white", padding: "9px 20px", borderRadius: 10, fontWeight: 700, fontSize: "0.82rem", textDecoration: "none" }}>
               📺 Tous les sermons →
             </a>
@@ -360,22 +366,30 @@ export default function EglisePharos() {
             </a>
           </div>
           <div className="events-list" style={{ marginBottom: "3rem" }}>
-            {EVENEMENTS.map((e, i) => (
-              <div key={i} className="event-row" onClick={() => showToast("📅 " + e.titre + " — " + e.heure + " · " + e.lieu)}>
-                <div className="event-date">
-                  <div className="event-day">{e.date.jour}</div>
-                  <div className="event-month">{e.date.mois}</div>
-                </div>
-                <div className="event-info">
-                  <div className="event-titre">{e.titre}</div>
-                  <div className="event-metas">
-                    <div className="event-meta">📍 {e.lieu}</div>
-                    <div className="event-meta">🕐 {e.heure}</div>
+            {gcalLoading && <div style={{ textAlign: "center", padding: "2rem", color: "var(--gray)", fontWeight: 600 }}>⏳ Chargement des événements...</div>}
+            {!gcalLoading && gcalEvents.length === 0 && <div style={{ textAlign: "center", padding: "2rem", color: "var(--gray)", fontWeight: 600 }}>Aucun événement à venir.</div>}
+            {!gcalLoading && gcalEvents.map((e, i) => {
+              const start = new Date(e.start?.dateTime || e.start?.date);
+              const jour = start.getDate().toString();
+              const mois = start.toLocaleDateString("fr-BE", { month: "short" }).toUpperCase().replace(".","");
+              const heure = e.start?.dateTime ? start.toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" }) : "Toute la journée";
+              return (
+                <div key={i} className="event-row" onClick={() => showToast("📅 " + e.summary + " — " + heure)}>
+                  <div className="event-date">
+                    <div className="event-day">{jour}</div>
+                    <div className="event-month">{mois}</div>
                   </div>
+                  <div className="event-info">
+                    <div className="event-titre">{e.summary}</div>
+                    <div className="event-metas">
+                      {e.location && <div className="event-meta">📍 {e.location}</div>}
+                      <div className="event-meta">🕐 {heure}</div>
+                    </div>
+                  </div>
+                  <div className="event-type">Pharos</div>
                 </div>
-                <div className="event-type">{e.type}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", justifyContent: "center" }}>
             <button onClick={() => setCalView("agenda")} className={"sf-btn" + (calView === "agenda" ? " active" : "")}>📋 Agenda</button>
